@@ -6,7 +6,7 @@
   <title>Strong Password Generator</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-black text-white min-h-screen flex items-center justify-center">
+<body class="bg-black text-white min-h-screen flex items-center justify-center relative">
   <div class="bg-gray-900 p-8 rounded-2xl shadow-lg w-full max-w-md">
     <h1 class="text-2xl font-bold text-center mb-6">🔐 Strong Password Generator</h1>
     
@@ -36,14 +36,18 @@
     </div>
   </div>
 
+  <!-- Toast Notification -->
+  <div id="toast" class="hidden fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-4 py-2 rounded shadow-lg text-sm transition-opacity duration-300">
+    ✅ Password copied to clipboard!
+  </div>
+
   <script>
     function generatePassword() {
       const length = document.getElementById('length').value;
       const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+[]{}|;:,.<>?";
       let password = '';
       for (let i = 0; i < length; i++) {
-        const randomChar = charset.charAt(Math.floor(Math.random() * charset.length));
-        password += randomChar;
+        password += charset.charAt(Math.floor(Math.random() * charset.length));
       }
       document.getElementById('password').value = password;
     }
@@ -51,9 +55,22 @@
     function copyPassword() {
       const passwordField = document.getElementById('password');
       if (!passwordField.value) return;
+
       navigator.clipboard.writeText(passwordField.value)
-        .then(() => alert("Password copied to clipboard!"))
+        .then(() => {
+          showToast();
+        })
         .catch(() => alert("Failed to copy password."));
+    }
+
+    function showToast() {
+      const toast = document.getElementById('toast');
+      toast.classList.remove('hidden');
+      toast.classList.add('opacity-100');
+
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 2000);
     }
 
     function resetForm() {
@@ -63,3 +80,4 @@
   </script>
 </body>
 </html>
+
